@@ -374,11 +374,7 @@
       const lerp = (a, b, k) => a + (b - a) * k;
       const easeOutExpo = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
       const easeInOut = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
-      const easeOutBack = (x) => {
-        const c1 = 1.70158;
-        const c3 = c1 + 1;
-        return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
-      };
+      const easeOutBack = (x, c1 = 1.70158) => 1 + (c1 + 1) * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
       const Z_AXIS = new THREE.Vector3(0, 0, 1);
 
       // --- Caméra : quasi fixe (le ciel CSS est fixe), léger orbit + dolly ---
@@ -763,7 +759,7 @@
         const pk = easeOutExpo(seg(t, PACK, PACK + 1.4));
 
         // Produit : arrivée en vrille, flottement, tour complet sur l'eau, puis posé au packshot
-        const enter = easeOutBack(seg(t, 0.15, 1.5));
+        const enter = easeOutBack(seg(t, 0.15, 1.5), 0.5);
         const spinIn = (1 - easeOutExpo(seg(t, 0.15, 1.9))) * Math.PI * 3;
         product.position.y = lerp(lerp(-9.5, 0, enter) + Math.sin(t * 1.6) * 0.07, -0.22, pk);
         const ry = spinIn + Math.sin(t * 0.9) * 0.3 + easeInOut(seg(t, 6.6, 9.2)) * Math.PI * 2;
