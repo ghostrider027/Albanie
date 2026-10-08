@@ -1,2 +1,4 @@
 snapshots/
 .hyperframes/
+renders/work-*/
+renders/.*
