@@ -204,7 +204,7 @@
       id="root"
       data-composition-id="main"
       data-start="0"
-      data-duration="12"
+      data-duration="12.6"
       data-width="1080"
       data-height="1920"
     >
@@ -227,7 +227,7 @@
       </div>
 
       <!-- Scène 2 : bouclier UV (le « SPF 50+ » est en 3D dans le canvas) -->
-      <div id="s2" class="layer clip" data-start="3" data-duration="3" data-track-index="2">
+      <div id="s2" class="layer clip" data-start="3" data-duration="3.6" data-track-index="2">
         <div class="copy top">
           <div id="s2-kicker" class="kicker">Bouclier UVA · UVB</div>
         </div>
@@ -237,7 +237,7 @@
       </div>
 
       <!-- Scène 3 : résistance à l'eau -->
-      <div id="s3" class="layer clip" data-start="6" data-duration="2.8" data-track-index="3">
+      <div id="s3" class="layer clip" data-start="6.6" data-duration="2.8" data-track-index="3">
         <div class="copy top">
           <div class="headline">
             <span class="line"><span id="s3-l1">Résiste</span></span>
@@ -254,7 +254,7 @@
       </div>
 
       <!-- Scène 4 : packshot -->
-      <div id="s4" class="layer clip" data-start="8.8" data-duration="3.2" data-track-index="4">
+      <div id="s4" class="layer clip" data-start="9.4" data-duration="3.2" data-track-index="4">
         <div class="copy top">
           <div id="brand">SOLÉA</div>
           <div id="s4-kicker" class="kicker">Crème solaire SPF 50+</div>
@@ -265,6 +265,20 @@
       </div>
 
       <div id="flash"></div>
+
+      <!-- Voix off (Kokoro, voix « Siwis ») normalisée à -16 LUFS -->
+      <audio id="vo-1" src="assets/voice/vo-1.wav" data-start="0.55" data-duration="1.81" data-track-index="10" data-volume="1"></audio>
+      <audio id="vo-2" src="assets/voice/vo-2.wav" data-start="2.95" data-duration="3.75" data-track-index="10" data-volume="1"></audio>
+      <audio id="vo-3" src="assets/voice/vo-3.wav" data-start="6.75" data-duration="2.15" data-track-index="10" data-volume="1"></audio>
+      <audio id="vo-4" src="assets/voice/vo-4.wav" data-start="9.6" data-duration="1.87" data-track-index="10" data-volume="1"></audio>
+
+      <!-- Bruitages (banque media-use, niveaux réglés dans les fichiers) -->
+      <audio id="sfx-arrive" src="assets/sfx/arrive.wav" data-start="0" data-duration="2.9" data-track-index="11" data-volume="1"></audio>
+      <audio id="sfx-shield" src="assets/sfx/shield.wav" data-start="3.05" data-duration="1.8" data-track-index="11" data-volume="1"></audio>
+      <audio id="sfx-splash" src="assets/sfx/splash.wav" data-start="6.45" data-duration="0.57" data-track-index="11" data-volume="1"></audio>
+      <audio id="sfx-flash" src="assets/sfx/flash.wav" data-start="9.2" data-duration="0.57" data-track-index="11" data-volume="1"></audio>
+      <audio id="sfx-chime" src="assets/sfx/chime.wav" data-start="9.15" data-duration="2.5" data-track-index="12" data-volume="1"></audio>
+      <audio id="sfx-pop" src="assets/sfx/pop.wav" data-start="10.2" data-duration="0.72" data-track-index="11" data-volume="1"></audio>
     </div>
 
     <script>
@@ -279,9 +293,9 @@
 
       // Décor : soleil qui se lève, rayons qui tournent, nuages qui dérivent
       tl.fromTo("#sun", { y: 260, opacity: 0 }, { y: 0, opacity: 1, duration: 1.8, ease: "power2.out" }, 0);
-      tl.fromTo("#sunburst", { rotation: 0, opacity: 0 }, { rotation: 36, opacity: 1, duration: 12, ease: "none" }, 0);
-      tl.fromTo("#cloud-a", { x: 0 }, { x: 140, duration: 12, ease: "none" }, 0);
-      tl.fromTo("#cloud-b", { x: 0 }, { x: -120, duration: 12, ease: "none" }, 0);
+      tl.fromTo("#sunburst", { rotation: 0, opacity: 0 }, { rotation: 38, opacity: 1, duration: 12.6, ease: "none" }, 0);
+      tl.fromTo("#cloud-a", { x: 0 }, { x: 150, duration: 12.6, ease: "none" }, 0);
+      tl.fromTo("#cloud-b", { x: 0 }, { x: -126, duration: 12.6, ease: "none" }, 0);
 
       // Scène 1
       tl.fromTo("#s1-kicker", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.5);
@@ -292,28 +306,28 @@
       // Scène 2
       tl.fromTo("#s2-kicker", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 3.1);
       tl.fromTo("#s2-pill", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(2)" }, 3.9);
-      tl.to(["#s2-kicker", "#s2-pill"], { opacity: 0, y: -40, duration: 0.35, ease: "power2.in", stagger: 0.04 }, 5.6);
+      tl.to(["#s2-kicker", "#s2-pill"], { opacity: 0, y: -40, duration: 0.35, ease: "power2.in", stagger: 0.04 }, 6.2);
 
       // Scène 3
-      tl.fromTo("#s3-l1", { yPercent: 110 }, { yPercent: 0, duration: 0.7, ease: "expo.out" }, 6.15);
-      tl.fromTo("#s3-l2", { yPercent: 110 }, { yPercent: 0, duration: 0.7, ease: "expo.out" }, 6.28);
+      tl.fromTo("#s3-l1", { yPercent: 110 }, { yPercent: 0, duration: 0.7, ease: "expo.out" }, 6.75);
+      tl.fromTo("#s3-l2", { yPercent: 110 }, { yPercent: 0, duration: 0.7, ease: "expo.out" }, 6.88);
       tl.fromTo(
         ["#s3-b1", "#s3-b2", "#s3-b3"],
         { opacity: 0, y: 60 },
         { opacity: 1, y: 0, duration: 0.55, ease: "power3.out", stagger: 0.12 },
-        6.7,
+        7.3,
       );
-      tl.to(["#s3-l1", "#s3-l2", "#s3-b1", "#s3-b2", "#s3-b3"], { opacity: 0, duration: 0.3, ease: "power2.in" }, 8.45);
+      tl.to(["#s3-l1", "#s3-l2", "#s3-b1", "#s3-b2", "#s3-b3"], { opacity: 0, duration: 0.3, ease: "power2.in" }, 9.05);
 
       // Flash de transition vers le packshot
-      tl.fromTo("#flash", { opacity: 0 }, { opacity: 0.85, duration: 0.12, ease: "power2.in" }, 8.68);
-      tl.to("#flash", { opacity: 0, duration: 0.5, ease: "power2.out" }, 8.8);
+      tl.fromTo("#flash", { opacity: 0 }, { opacity: 0.85, duration: 0.12, ease: "power2.in" }, 9.28);
+      tl.to("#flash", { opacity: 0, duration: 0.5, ease: "power2.out" }, 9.4);
 
       // Scène 4
-      tl.fromTo("#brand", { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.9, ease: "expo.out" }, 8.95);
-      tl.fromTo("#s4-kicker", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 9.35);
-      tl.fromTo("#cta", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.6, ease: "back.out(1.8)" }, 9.7);
-      tl.to("#cta", { scale: 1.06, duration: 0.35, ease: "sine.inOut", yoyo: true, repeat: 3 }, 10.4);
+      tl.fromTo("#brand", { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.9, ease: "expo.out" }, 9.55);
+      tl.fromTo("#s4-kicker", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 9.95);
+      tl.fromTo("#cta", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.6, ease: "back.out(1.8)" }, 10.3);
+      tl.to("#cta", { scale: 1.06, duration: 0.35, ease: "sine.inOut", yoyo: true, repeat: 3 }, 11.0);
 
       window.__timelines["main"] = tl;
       tl.seek(0);
@@ -329,7 +343,7 @@
 
       const W = 1080;
       const H = 1920;
-      const PACK = 8.8; // début du packshot
+      const PACK = 9.4; // début du packshot
       const canvas = document.getElementById("three-layer");
       const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
       renderer.setSize(W, H, false);
@@ -533,7 +547,7 @@
         const m = new THREE.Mesh(dropGeo, dropMat);
         const front = i % 2 === 0;
         m.position.set((rand() - 0.5) * 0.9, (rand() - 0.5) * 2.0, front ? 0.31 : -0.31);
-        beads.push({ mesh: m, r: 0.035 + rand() * 0.055, delay: 6.15 + rand() * 0.5 });
+        beads.push({ mesh: m, r: 0.035 + rand() * 0.055, delay: 6.75 + rand() * 0.5 });
         m.visible = false;
         product.add(m);
       }
@@ -544,7 +558,7 @@
         const sp = 1.1 + rand() * 1.7;
         splash.push({
           mesh: m,
-          t0: 5.95 + rand() * 0.45,
+          t0: 6.55 + rand() * 0.45,
           p0: new THREE.Vector3(Math.cos(a) * 0.55, -2.2, Math.sin(a) * 0.55),
           v: new THREE.Vector3(Math.cos(a) * sp, 5.6 + rand() * 2.6, Math.sin(a) * sp),
           r: 0.05 + rand() * 0.09,
@@ -671,7 +685,7 @@
         const flight = dIn.length() / RAY_SPEED;
         dIn.normalize();
         const dOut = dIn.clone().addScaledVector(n, -2 * dIn.dot(n)).normalize();
-        const t0 = 3.45 + (i / RAYS) * 1.5 + rand() * 0.15;
+        const t0 = 3.45 + (i / RAYS) * 2.0 + rand() * 0.15;
         const mesh = new THREE.Mesh(
           rayGeo,
           new THREE.MeshBasicMaterial({
@@ -752,7 +766,7 @@
         const enter = easeOutBack(seg(t, 0.15, 1.5));
         const spinIn = (1 - easeOutExpo(seg(t, 0.15, 1.9))) * Math.PI * 3;
         product.position.y = lerp(lerp(-9.5, 0, enter) + Math.sin(t * 1.6) * 0.07, -0.22, pk);
-        const ry = spinIn + Math.sin(t * 0.9) * 0.3 + easeInOut(seg(t, 6.0, 8.6)) * Math.PI * 2;
+        const ry = spinIn + Math.sin(t * 0.9) * 0.3 + easeInOut(seg(t, 6.6, 9.2)) * Math.PI * 2;
         product.rotation.set(
           Math.sin(t * 1.1) * 0.06 * (1 - pk),
           lerp(ry, Math.PI * 2 + 0.22, pk),
@@ -765,8 +779,8 @@
 
         // Texte 3D SPF 50+
         const tin = seg(t, 3.25, 4.05);
-        const tout = easeInOut(seg(t, 5.5, 5.95));
-        spf.visible = t >= 3.25 && t < 5.95;
+        const tout = easeInOut(seg(t, 6.1, 6.55));
+        spf.visible = t >= 3.25 && t < 6.55;
         spf.rotation.x = (1 - easeOutBack(tin)) * (-Math.PI / 2);
         spf.rotation.y = Math.sin(t * 1.4) * 0.18 * easeOutExpo(tin);
         spf.scale.setScalar(Math.max(0.001, lerp(0.5, 1, easeOutExpo(tin)) * (1 - tout)));
@@ -774,8 +788,8 @@
 
         // Bouclier
         const sIn = easeOutBack(seg(t, 3.05, 3.7));
-        const sOut = seg(t, 5.7, 6.4);
-        shield.visible = t > 3.05 && t < 6.4;
+        const sOut = seg(t, 6.3, 7.0);
+        shield.visible = t > 3.05 && t < 7.0;
         shield.scale.setScalar(Math.max(0.001, sIn * (1 + sOut * 0.5)));
         shieldMat.uniforms.uTime.value = t;
         shieldMat.uniforms.uOpacity.value = clamp01(sIn) * (1 - sOut);
