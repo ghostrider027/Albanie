@@ -1,0 +1,854 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Soléa SPF 50+ — pub 3D</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./assets/vendor/three.module.js"
+        }
+      }
+    </script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #1f7fe0;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: system-ui, sans-serif;
+        color: #fff;
+      }
+      #sky {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          #0a52c4 0%,
+          #1f7fe0 22%,
+          #59b4f0 45%,
+          #a9dcf5 60%,
+          #ffd9a8 78%,
+          #ff9f6a 100%
+        );
+      }
+      #sunburst {
+        position: absolute;
+        left: 100px;
+        top: -790px;
+        width: 1800px;
+        height: 1800px;
+        border-radius: 50%;
+        background: repeating-conic-gradient(
+          from 0deg,
+          rgba(255, 255, 255, 0.13) 0deg 5deg,
+          rgba(255, 255, 255, 0) 5deg 15deg
+        );
+        -webkit-mask-image: radial-gradient(circle, #000 0%, rgba(0, 0, 0, 0.5) 30%, transparent 62%);
+        mask-image: radial-gradient(circle, #000 0%, rgba(0, 0, 0, 0.5) 30%, transparent 62%);
+      }
+      #sun {
+        position: absolute;
+        left: 700px;
+        top: -190px;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          #fffdf2 0%,
+          #fff6c8 13%,
+          #ffe07a 21%,
+          rgba(255, 214, 110, 0.55) 29%,
+          rgba(255, 200, 110, 0.2) 45%,
+          rgba(255, 190, 110, 0) 68%
+        );
+      }
+      .cloud {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(255, 255, 255, 0.8) 0%,
+          rgba(255, 255, 255, 0.35) 45%,
+          rgba(255, 255, 255, 0) 70%
+        );
+      }
+      #cloud-a {
+        left: -160px;
+        top: 760px;
+        width: 640px;
+        height: 210px;
+      }
+      #cloud-b {
+        left: 620px;
+        top: 1140px;
+        width: 580px;
+        height: 190px;
+      }
+      #three-layer {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .layer {
+        position: absolute;
+        inset: 0;
+      }
+      .copy {
+        position: absolute;
+        left: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .top {
+        top: 210px;
+      }
+      .bottom {
+        bottom: 265px;
+      }
+      .kicker {
+        font-size: 34px;
+        font-weight: 800;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        text-shadow: 0 2px 18px rgba(0, 40, 90, 0.45);
+      }
+      .headline {
+        margin-top: 18px;
+        font-size: 112px;
+        line-height: 0.95;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        text-shadow: 0 6px 40px rgba(0, 40, 90, 0.4);
+      }
+      .line {
+        display: block;
+        overflow: hidden;
+        padding: 0 20px 8px;
+      }
+      .line > span {
+        display: block;
+      }
+      .pill {
+        display: inline-block;
+        padding: 22px 46px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.95);
+        color: #0b4fa8;
+        font-size: 44px;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        box-shadow: 0 18px 50px rgba(0, 40, 90, 0.28);
+      }
+      .badges {
+        display: flex;
+        gap: 22px;
+        justify-content: center;
+      }
+      .badge {
+        width: 260px;
+        padding: 24px 10px;
+        border-radius: 32px;
+        background: rgba(8, 60, 140, 0.84);
+        border: 2px solid rgba(255, 255, 255, 0.55);
+        font-size: 30px;
+        font-weight: 700;
+        line-height: 1.15;
+        box-shadow: 0 14px 40px rgba(0, 40, 90, 0.25);
+      }
+      .badge b {
+        display: block;
+        font-size: 58px;
+        font-weight: 900;
+      }
+      #brand {
+        font-size: 150px;
+        line-height: 1.05;
+        font-weight: 900;
+        letter-spacing: 0.06em;
+        text-shadow: 0 8px 50px rgba(0, 40, 90, 0.45);
+      }
+      #s4-kicker {
+        margin-top: 6px;
+      }
+      #flash {
+        position: absolute;
+        inset: 0;
+        background: #fff6dc;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="12"
+      data-width="1080"
+      data-height="1920"
+    >
+      <div id="sky"></div>
+      <div id="sunburst"></div>
+      <div id="sun"></div>
+      <div id="cloud-a" class="cloud"></div>
+      <div id="cloud-b" class="cloud"></div>
+      <canvas id="three-layer"></canvas>
+
+      <!-- Scène 1 : accroche -->
+      <div id="s1" class="layer clip" data-start="0" data-duration="3" data-track-index="1">
+        <div class="copy top">
+          <div id="s1-kicker" class="kicker">Nouveau</div>
+          <div class="headline">
+            <span class="line"><span id="s1-l1">L'été,</span></span>
+            <span class="line"><span id="s1-l2">sans brûlure.</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scène 2 : bouclier UV (le « SPF 50+ » est en 3D dans le canvas) -->
+      <div id="s2" class="layer clip" data-start="3" data-duration="3" data-track-index="2">
+        <div class="copy top">
+          <div id="s2-kicker" class="kicker">Bouclier UVA · UVB</div>
+        </div>
+        <div class="copy bottom">
+          <div id="s2-pill" class="pill">Protection très haute</div>
+        </div>
+      </div>
+
+      <!-- Scène 3 : résistance à l'eau -->
+      <div id="s3" class="layer clip" data-start="6" data-duration="2.8" data-track-index="3">
+        <div class="copy top">
+          <div class="headline">
+            <span class="line"><span id="s3-l1">Résiste</span></span>
+            <span class="line"><span id="s3-l2">à l'eau.</span></span>
+          </div>
+        </div>
+        <div class="copy bottom">
+          <div class="badges">
+            <div id="s3-b1" class="badge"><b>80 min</b>dans l'eau</div>
+            <div id="s3-b2" class="badge"><b>0 %</b>trace blanche</div>
+            <div id="s3-b3" class="badge"><b>Reef</b>safe</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scène 4 : packshot -->
+      <div id="s4" class="layer clip" data-start="8.8" data-duration="3.2" data-track-index="4">
+        <div class="copy top">
+          <div id="brand">SOLÉA</div>
+          <div id="s4-kicker" class="kicker">Crème solaire SPF 50+</div>
+        </div>
+        <div class="copy bottom">
+          <div id="cta" class="pill">Disponible en pharmacie</div>
+        </div>
+      </div>
+
+      <div id="flash"></div>
+    </div>
+
+    <script>
+      // Le module Three.js se charge de façon asynchrone : on demande au runtime d'attendre la scène.
+      window.__hf = window.__hf || {};
+      window.__hf.buildReady = window.__hf.buildReady || {};
+      window.__hf.buildReady["solea-3d"] = new Promise((resolve) => {
+        window.__soleaReady = resolve;
+      });
+
+      const tl = gsap.timeline({ paused: true });
+
+      // Décor : soleil qui se lève, rayons qui tournent, nuages qui dérivent
+      tl.fromTo("#sun", { y: 260, opacity: 0 }, { y: 0, opacity: 1, duration: 1.8, ease: "power2.out" }, 0);
+      tl.fromTo("#sunburst", { rotation: 0, opacity: 0 }, { rotation: 36, opacity: 1, duration: 12, ease: "none" }, 0);
+      tl.fromTo("#cloud-a", { x: 0 }, { x: 140, duration: 12, ease: "none" }, 0);
+      tl.fromTo("#cloud-b", { x: 0 }, { x: -120, duration: 12, ease: "none" }, 0);
+
+      // Scène 1
+      tl.fromTo("#s1-kicker", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.5);
+      tl.fromTo("#s1-l1", { yPercent: 110 }, { yPercent: 0, duration: 0.7, ease: "expo.out" }, 0.65);
+      tl.fromTo("#s1-l2", { yPercent: 110 }, { yPercent: 0, duration: 0.7, ease: "expo.out" }, 0.78);
+      tl.to(["#s1-kicker", "#s1-l1", "#s1-l2"], { opacity: 0, y: -40, duration: 0.35, ease: "power2.in", stagger: 0.04 }, 2.6);
+
+      // Scène 2
+      tl.fromTo("#s2-kicker", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 3.1);
+      tl.fromTo("#s2-pill", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(2)" }, 3.9);
+      tl.to(["#s2-kicker", "#s2-pill"], { opacity: 0, y: -40, duration: 0.35, ease: "power2.in", stagger: 0.04 }, 5.6);
+
+      // Scène 3
+      tl.fromTo("#s3-l1", { yPercent: 110 }, { yPercent: 0, duration: 0.7, ease: "expo.out" }, 6.15);
+      tl.fromTo("#s3-l2", { yPercent: 110 }, { yPercent: 0, duration: 0.7, ease: "expo.out" }, 6.28);
+      tl.fromTo(
+        ["#s3-b1", "#s3-b2", "#s3-b3"],
+        { opacity: 0, y: 60 },
+        { opacity: 1, y: 0, duration: 0.55, ease: "power3.out", stagger: 0.12 },
+        6.7,
+      );
+      tl.to(["#s3-l1", "#s3-l2", "#s3-b1", "#s3-b2", "#s3-b3"], { opacity: 0, duration: 0.3, ease: "power2.in" }, 8.45);
+
+      // Flash de transition vers le packshot
+      tl.fromTo("#flash", { opacity: 0 }, { opacity: 0.85, duration: 0.12, ease: "power2.in" }, 8.68);
+      tl.to("#flash", { opacity: 0, duration: 0.5, ease: "power2.out" }, 8.8);
+
+      // Scène 4
+      tl.fromTo("#brand", { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.9, ease: "expo.out" }, 8.95);
+      tl.fromTo("#s4-kicker", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 9.35);
+      tl.fromTo("#cta", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.6, ease: "back.out(1.8)" }, 9.7);
+      tl.to("#cta", { scale: 1.06, duration: 0.35, ease: "sine.inOut", yoyo: true, repeat: 3 }, 10.4);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+
+    <script type="module">
+      import * as THREE from "three";
+      import { RoundedBoxGeometry } from "./assets/vendor/RoundedBoxGeometry.js";
+      import { RoomEnvironment } from "./assets/vendor/RoomEnvironment.js";
+      import { Font } from "./assets/vendor/FontLoader.js";
+      import { TextGeometry } from "./assets/vendor/TextGeometry.js";
+      import helvetikerBold from "./assets/vendor/helvetiker_bold.js";
+
+      const W = 1080;
+      const H = 1920;
+      const PACK = 8.8; // début du packshot
+      const canvas = document.getElementById("three-layer");
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setSize(W, H, false);
+      renderer.setPixelRatio(1);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.0;
+
+      const scene = new THREE.Scene();
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+      scene.environmentIntensity = 0.85;
+      const camera = new THREE.PerspectiveCamera(32, W / H, 0.1, 100);
+
+      // --- Utilitaires déterministes ---
+      function mulberry32(a) {
+        return function () {
+          a |= 0;
+          a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+      const rand = mulberry32(20260708);
+      const clamp01 = (x) => Math.min(1, Math.max(0, x));
+      const seg = (t, a, b) => clamp01((t - a) / (b - a));
+      const lerp = (a, b, k) => a + (b - a) * k;
+      const easeOutExpo = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
+      const easeInOut = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+      const easeOutBack = (x) => {
+        const c1 = 1.70158;
+        const c3 = c1 + 1;
+        return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
+      };
+      const Z_AXIS = new THREE.Vector3(0, 0, 1);
+
+      // --- Caméra : quasi fixe (le ciel CSS est fixe), léger orbit + dolly ---
+      function camPose(t, pos, look) {
+        const pre = easeInOut(seg(t, 0, PACK));
+        const pk = easeOutExpo(seg(t, PACK, PACK + 1.4));
+        const ang = lerp(lerp(-0.12, 0.12, pre), 0, pk);
+        const dist = lerp(lerp(13.1, 12.2, pre), 10.6, pk);
+        pos.set(Math.sin(ang) * dist, lerp(0.7, 0.35, pk), Math.cos(ang) * dist);
+        look.set(0, lerp(-0.1, -0.35, pk), 0);
+      }
+
+      // --- Lumières ---
+      scene.add(new THREE.HemisphereLight(0xcfe9ff, 0xffb27a, 0.9));
+      const key = new THREE.DirectionalLight(0xfff1d6, 2.2);
+      key.position.set(3, 5, 4);
+      scene.add(key);
+      const rim = new THREE.DirectionalLight(0xffa860, 1.8);
+      rim.position.set(-4, 2, -3);
+      scene.add(rim);
+
+      // --- Textures dessinées (canvas, une seule fois au chargement) ---
+      function canvasTexture(w, h, draw) {
+        const c = document.createElement("canvas");
+        c.width = w;
+        c.height = h;
+        draw(c.getContext("2d"), w, h);
+        const tex = new THREE.CanvasTexture(c);
+        tex.colorSpace = THREE.SRGBColorSpace;
+        tex.anisotropy = 8;
+        return tex;
+      }
+
+      // Proportions de la face avant du tube arrondi ≈ 1.37 x 2.47
+      const LW = 720;
+      const LH = 1296;
+      const frontLabel = canvasTexture(LW, LH, (g) => {
+        const bg = g.createLinearGradient(0, 0, 0, LH);
+        bg.addColorStop(0, "#ffffff");
+        bg.addColorStop(1, "#e6f4ff");
+        g.fillStyle = bg;
+        g.fillRect(0, 0, LW, LH);
+        // soleil
+        g.fillStyle = "#ffb12b";
+        g.beginPath();
+        g.arc(360, 260, 88, 0, Math.PI * 2);
+        g.fill();
+        g.strokeStyle = "#ffb12b";
+        g.lineWidth = 14;
+        g.lineCap = "round";
+        for (let i = 0; i < 12; i++) {
+          const a = (i / 12) * Math.PI * 2;
+          g.beginPath();
+          g.moveTo(360 + Math.cos(a) * 112, 260 + Math.sin(a) * 112);
+          g.lineTo(360 + Math.cos(a) * 150, 260 + Math.sin(a) * 150);
+          g.stroke();
+        }
+        g.textAlign = "center";
+        g.fillStyle = "#0b4fa8";
+        g.font = "900 128px system-ui, sans-serif";
+        g.fillText("SOLÉA", 360, 560);
+        g.font = "700 36px system-ui, sans-serif";
+        g.fillText("PROTECTION TRÈS HAUTE", 360, 625);
+        // bande SPF
+        const band = g.createLinearGradient(0, 0, LW, 0);
+        band.addColorStop(0, "#ff7a3d");
+        band.addColorStop(1, "#ffc23d");
+        g.fillStyle = band;
+        g.fillRect(0, 720, LW, 210);
+        g.fillStyle = "#ffffff";
+        g.font = "900 138px system-ui, sans-serif";
+        g.fillText("SPF 50+", 360, 875);
+        g.fillStyle = "#0b4fa8";
+        g.font = "700 40px system-ui, sans-serif";
+        g.fillText("CRÈME SOLAIRE", 360, 1030);
+        g.font = "600 34px system-ui, sans-serif";
+        g.fillText("Visage & corps · 200 ml", 360, 1085);
+      });
+
+      const backLabel = canvasTexture(LW, LH, (g) => {
+        g.fillStyle = "#ffffff";
+        g.fillRect(0, 0, LW, LH);
+        // vague bleue
+        g.fillStyle = "#2f9be8";
+        g.beginPath();
+        g.moveTo(0, 930);
+        for (let x = 0; x <= LW; x += 8) g.lineTo(x, 930 + Math.sin((x / LW) * Math.PI * 3) * 26);
+        g.lineTo(LW, LH);
+        g.lineTo(0, LH);
+        g.closePath();
+        g.fill();
+        g.textAlign = "center";
+        g.fillStyle = "#0b4fa8";
+        g.font = "900 96px system-ui, sans-serif";
+        g.fillText("RÉSISTE", 360, 300);
+        g.fillText("À L'EAU", 360, 400);
+        const items = ["80 min dans l'eau", "Sans trace blanche", "Respecte les océans"];
+        g.textAlign = "left";
+        g.font = "700 40px system-ui, sans-serif";
+        items.forEach((txt, i) => {
+          const y = 540 + i * 90;
+          g.strokeStyle = "#ff8a2b";
+          g.lineWidth = 11;
+          g.lineCap = "round";
+          g.lineJoin = "round";
+          g.beginPath();
+          g.moveTo(150, y - 16);
+          g.lineTo(170, y + 4);
+          g.lineTo(206, y - 34);
+          g.stroke();
+          g.fillStyle = "#0b4fa8";
+          g.fillText(txt, 230, y);
+        });
+        g.textAlign = "center";
+        g.fillStyle = "#ffffff";
+        g.font = "800 50px system-ui, sans-serif";
+        g.fillText("UVA · UVB · SPF 50+", 360, 1085);
+      });
+
+      function radialTexture(stops) {
+        return canvasTexture(256, 256, (g) => {
+          const r = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+          stops.forEach(([o, c]) => r.addColorStop(o, c));
+          g.fillStyle = r;
+          g.fillRect(0, 0, 256, 256);
+        });
+      }
+
+      // --- Tube de crème : corps arrondi + bouchon (posé sur le bouchon) ---
+      const product = new THREE.Group();
+      const shell = () =>
+        new THREE.MeshPhysicalMaterial({ color: 0xf7fbff, roughness: 0.32, clearcoat: 1, clearcoatRoughness: 0.12 });
+      const body = new THREE.Mesh(new RoundedBoxGeometry(1.5, 2.6, 0.62, 8, 0.3), [
+        shell(),
+        shell(),
+        shell(),
+        shell(),
+        new THREE.MeshPhysicalMaterial({ map: frontLabel, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.08 }),
+        new THREE.MeshPhysicalMaterial({ map: backLabel, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.08 }),
+      ]);
+      product.add(body);
+      const capMat = new THREE.MeshPhysicalMaterial({ color: 0xff8a2b, roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.06 });
+      const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.46, 0.55, 64), capMat);
+      cap.position.y = -1.57;
+      product.add(cap);
+      const capRing = new THREE.Mesh(new THREE.TorusGeometry(0.44, 0.04, 16, 64), capMat);
+      capRing.rotation.x = Math.PI / 2;
+      capRing.position.y = -1.3;
+      product.add(capRing);
+      scene.add(product);
+
+      // --- Gouttes d'eau : perles sur le tube + éclaboussure ---
+      const dropMat = new THREE.MeshPhysicalMaterial({
+        color: 0xeaf8ff,
+        roughness: 0.02,
+        transmission: 1,
+        thickness: 0.5,
+        ior: 1.33,
+        clearcoat: 1,
+        transparent: true,
+        envMapIntensity: 1.6,
+      });
+      const dropGeo = new THREE.SphereGeometry(1, 24, 16);
+      const beads = [];
+      for (let i = 0; i < 26; i++) {
+        const m = new THREE.Mesh(dropGeo, dropMat);
+        const front = i % 2 === 0;
+        m.position.set((rand() - 0.5) * 0.9, (rand() - 0.5) * 2.0, front ? 0.31 : -0.31);
+        beads.push({ mesh: m, r: 0.035 + rand() * 0.055, delay: 6.15 + rand() * 0.5 });
+        m.visible = false;
+        product.add(m);
+      }
+      const splash = [];
+      for (let i = 0; i < 38; i++) {
+        const m = new THREE.Mesh(dropGeo, dropMat);
+        const a = rand() * Math.PI * 2;
+        const sp = 1.1 + rand() * 1.7;
+        splash.push({
+          mesh: m,
+          t0: 5.95 + rand() * 0.45,
+          p0: new THREE.Vector3(Math.cos(a) * 0.55, -2.2, Math.sin(a) * 0.55),
+          v: new THREE.Vector3(Math.cos(a) * sp, 5.6 + rand() * 2.6, Math.sin(a) * sp),
+          r: 0.05 + rand() * 0.09,
+        });
+        m.visible = false;
+        scene.add(m);
+      }
+
+      // --- Texte 3D extrudé « SPF 50+ » ---
+      const font = new Font(helvetikerBold);
+      const spfGeo = new TextGeometry("SPF 50+", {
+        font,
+        size: 0.45,
+        depth: 0.16,
+        curveSegments: 8,
+        bevelEnabled: true,
+        bevelThickness: 0.03,
+        bevelSize: 0.018,
+        bevelSegments: 3,
+      });
+      spfGeo.center();
+      const spfText = new THREE.Mesh(spfGeo, [
+        new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.08 }),
+        new THREE.MeshPhysicalMaterial({ color: 0xff7a1f, roughness: 0.28, clearcoat: 1, metalness: 0.1 }),
+      ]);
+      const spf = new THREE.Group();
+      spf.add(spfText);
+      spf.position.set(0, 2.05, 0.6);
+      scene.add(spf);
+
+      // --- Bouclier UV : bulle à effet fresnel + ondes d'impact ---
+      const SHIELD_C = new THREE.Vector3(0, -0.27, 0);
+      const SHIELD_R = 1.9;
+      const RAYS = 18;
+      const hits = [];
+      const shieldMat = new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+        uniforms: {
+          uTime: { value: 0 },
+          uOpacity: { value: 0 },
+          uCenter: { value: SHIELD_C },
+          uHits: { value: hits },
+        },
+        vertexShader: /* glsl */ `
+          varying vec3 vN;
+          varying vec3 vV;
+          varying vec3 vW;
+          void main() {
+            vec4 wp = modelMatrix * vec4(position, 1.0);
+            vW = wp.xyz;
+            vN = normalize(mat3(modelMatrix) * normal);
+            vV = normalize(cameraPosition - wp.xyz);
+            gl_Position = projectionMatrix * viewMatrix * wp;
+          }
+        `,
+        fragmentShader: /* glsl */ `
+          uniform float uTime;
+          uniform float uOpacity;
+          uniform vec3 uCenter;
+          uniform vec4 uHits[${RAYS}];
+          varying vec3 vN;
+          varying vec3 vV;
+          varying vec3 vW;
+          void main() {
+            vec3 dir = normalize(vW - uCenter);
+            float fres = pow(1.0 - abs(dot(normalize(vN), normalize(vV))), 2.4);
+            float bands = 0.5 + 0.5 * sin(dir.y * 18.0 - uTime * 3.0);
+            vec3 col = mix(vec3(0.45, 0.86, 1.0), vec3(0.82, 0.58, 1.0), bands * 0.5 + fres * 0.5);
+            float ripple = 0.0;
+            for (int i = 0; i < ${RAYS}; i++) {
+              float age = uTime - uHits[i].w;
+              if (age > 0.0 && age < 0.9) {
+                float d = acos(clamp(dot(dir, uHits[i].xyz), -1.0, 1.0));
+                ripple += exp(-pow((d - age * 1.7) * 13.0, 2.0)) * (1.0 - age / 0.9);
+                ripple += exp(-d * d * 70.0) * max(0.0, 1.0 - age * 5.0) * 1.6;
+              }
+            }
+            float a = (0.06 + fres * 0.7 + bands * 0.04 + ripple * 0.9) * uOpacity;
+            gl_FragColor = vec4(col + ripple * vec3(1.0, 0.95, 0.8), clamp(a, 0.0, 1.0));
+          }
+        `,
+      });
+      const shield = new THREE.Mesh(new THREE.SphereGeometry(SHIELD_R, 96, 96), shieldMat);
+      shield.position.copy(SHIELD_C);
+      scene.add(shield);
+
+      // --- Rayons UV : partent du soleil (CSS) et rebondissent sur le bouclier ---
+      const pose = { pos: new THREE.Vector3(), look: new THREE.Vector3() };
+      camPose(4.4, pose.pos, pose.look);
+      camera.position.copy(pose.pos);
+      camera.lookAt(pose.look);
+      camera.updateMatrixWorld();
+      // centre du soleil CSS (1000, 110) en coordonnées normalisées
+      const sunDir = new THREE.Vector3((1000 / W) * 2 - 1, 1 - (110 / H) * 2, 0.5)
+        .unproject(camera)
+        .sub(camera.position)
+        .normalize();
+      const SUN = camera.position.clone().addScaledVector(sunDir, 26);
+      const toSun = SUN.clone().sub(SHIELD_C).normalize();
+      const RAY_SPEED = 30;
+      const RAY_LEN = 2.2;
+      const streak = canvasTexture(4, 64, (g) => {
+        const gr = g.createLinearGradient(0, 0, 0, 64);
+        gr.addColorStop(0, "rgba(255,255,255,1)");
+        gr.addColorStop(1, "rgba(255,255,255,0)");
+        g.fillStyle = gr;
+        g.fillRect(0, 0, 4, 64);
+      });
+      const rayGeo = new THREE.CylinderGeometry(0.05, 0.05, RAY_LEN, 10, 1, true);
+      rayGeo.rotateX(Math.PI / 2);
+      const rays = [];
+      for (let i = 0; i < RAYS; i++) {
+        const n = toSun
+          .clone()
+          .multiplyScalar(0.5)
+          .add(new THREE.Vector3(0.55 + (rand() * 2 - 1) * 0.5, 0.45 + (rand() * 2 - 1) * 0.5, 0.1 + (rand() * 2 - 1) * 0.25))
+          .normalize();
+        if (n.dot(toSun) < 0.15) n.addScaledVector(toSun, 0.6).normalize();
+        const hit = SHIELD_C.clone().addScaledVector(n, SHIELD_R);
+        const start = SUN.clone().add(new THREE.Vector3((rand() - 0.5) * 1.5, (rand() - 0.5) * 1.5, (rand() - 0.5) * 1.5));
+        const dIn = hit.clone().sub(start);
+        const flight = dIn.length() / RAY_SPEED;
+        dIn.normalize();
+        const dOut = dIn.clone().addScaledVector(n, -2 * dIn.dot(n)).normalize();
+        const t0 = 3.45 + (i / RAYS) * 1.5 + rand() * 0.15;
+        const mesh = new THREE.Mesh(
+          rayGeo,
+          new THREE.MeshBasicMaterial({
+            color: i % 3 === 0 ? 0xffc933 : 0xa855f7,
+            map: streak,
+            transparent: true,
+            opacity: 0,
+            depthWrite: false,
+            toneMapped: false,
+          }),
+        );
+        mesh.visible = false;
+        scene.add(mesh);
+        rays.push({ mesh, start, hit, dIn, dOut, t0, flight });
+        hits.push(new THREE.Vector4(n.x, n.y, n.z, t0 + flight));
+      }
+
+      // --- Paillettes de lumière ---
+      const SP = 140;
+      const sparkPos = new Float32Array(SP * 3);
+      const sparkBase = [];
+      for (let i = 0; i < SP; i++) {
+        sparkBase.push([(rand() - 0.5) * 9, (rand() - 0.5) * 14, -2 - rand() * 6, rand() * Math.PI * 2]);
+      }
+      const sparkGeo = new THREE.BufferGeometry();
+      sparkGeo.setAttribute("position", new THREE.BufferAttribute(sparkPos, 3));
+      const sparks = new THREE.Points(
+        sparkGeo,
+        new THREE.PointsMaterial({
+          size: 0.09,
+          map: radialTexture([
+            [0, "rgba(255,255,255,1)"],
+            [0.35, "rgba(255,240,200,0.5)"],
+            [1, "rgba(255,240,200,0)"],
+          ]),
+          transparent: true,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
+          opacity: 0.85,
+          toneMapped: false,
+        }),
+      );
+      scene.add(sparks);
+
+      // --- Podium de sable + ombre douce (packshot) ---
+      const podium = new THREE.Mesh(
+        new THREE.CylinderGeometry(1.7, 1.9, 0.35, 96),
+        new THREE.MeshPhysicalMaterial({ color: 0xffe6c2, roughness: 0.55, clearcoat: 0.3 }),
+      );
+      const blob = new THREE.Mesh(
+        new THREE.PlaneGeometry(1.9, 1.9),
+        new THREE.MeshBasicMaterial({
+          map: radialTexture([
+            [0, "rgba(120,60,20,0.55)"],
+            [0.5, "rgba(120,60,20,0.2)"],
+            [1, "rgba(120,60,20,0)"],
+          ]),
+          transparent: true,
+          depthWrite: false,
+          toneMapped: false,
+        }),
+      );
+      blob.rotation.x = -Math.PI / 2;
+      blob.position.y = 0.177;
+      podium.add(blob);
+      scene.add(podium);
+
+      const tmp = new THREE.Vector3();
+
+      function renderAt(t) {
+        camPose(t, pose.pos, pose.look);
+        camera.position.copy(pose.pos);
+        camera.lookAt(pose.look);
+
+        const pk = easeOutExpo(seg(t, PACK, PACK + 1.4));
+
+        // Produit : arrivée en vrille, flottement, tour complet sur l'eau, puis posé au packshot
+        const enter = easeOutBack(seg(t, 0.15, 1.5));
+        const spinIn = (1 - easeOutExpo(seg(t, 0.15, 1.9))) * Math.PI * 3;
+        product.position.y = lerp(lerp(-9.5, 0, enter) + Math.sin(t * 1.6) * 0.07, -0.22, pk);
+        const ry = spinIn + Math.sin(t * 0.9) * 0.3 + easeInOut(seg(t, 6.0, 8.6)) * Math.PI * 2;
+        product.rotation.set(
+          Math.sin(t * 1.1) * 0.06 * (1 - pk),
+          lerp(ry, Math.PI * 2 + 0.22, pk),
+          lerp(Math.sin(t * 0.7) * 0.08, 0, pk),
+        );
+
+        // Podium qui monte au packshot
+        podium.visible = t >= PACK - 0.05;
+        podium.position.y = lerp(-4.6, -2.25, easeOutExpo(seg(t, PACK - 0.05, PACK + 0.8)));
+
+        // Texte 3D SPF 50+
+        const tin = seg(t, 3.25, 4.05);
+        const tout = easeInOut(seg(t, 5.5, 5.95));
+        spf.visible = t >= 3.25 && t < 5.95;
+        spf.rotation.x = (1 - easeOutBack(tin)) * (-Math.PI / 2);
+        spf.rotation.y = Math.sin(t * 1.4) * 0.18 * easeOutExpo(tin);
+        spf.scale.setScalar(Math.max(0.001, lerp(0.5, 1, easeOutExpo(tin)) * (1 - tout)));
+        spf.position.y = 2.05 + tout * 0.8;
+
+        // Bouclier
+        const sIn = easeOutBack(seg(t, 3.05, 3.7));
+        const sOut = seg(t, 5.7, 6.4);
+        shield.visible = t > 3.05 && t < 6.4;
+        shield.scale.setScalar(Math.max(0.001, sIn * (1 + sOut * 0.5)));
+        shieldMat.uniforms.uTime.value = t;
+        shieldMat.uniforms.uOpacity.value = clamp01(sIn) * (1 - sOut);
+
+        // Rayons UV
+        for (const r of rays) {
+          const lt = t - r.t0;
+          const m = r.mesh;
+          if (lt < 0 || lt > r.flight + 0.45) {
+            m.visible = false;
+            continue;
+          }
+          m.visible = true;
+          let dir;
+          let len;
+          let fade;
+          if (lt < r.flight) {
+            tmp.copy(r.start).addScaledVector(r.dIn, RAY_SPEED * lt);
+            dir = r.dIn;
+            len = Math.min(1, (RAY_SPEED * lt) / RAY_LEN);
+            fade = clamp01(lt * 8);
+          } else {
+            const k = lt - r.flight;
+            tmp.copy(r.hit).addScaledVector(r.dOut, RAY_SPEED * 0.6 * k);
+            dir = r.dOut;
+            len = Math.min(1, 0.05 + (RAY_SPEED * 0.6 * k) / RAY_LEN);
+            fade = 1 - k / 0.45;
+          }
+          m.scale.set(1, 1, Math.max(0.001, len));
+          m.position.copy(tmp).addScaledVector(dir, (-RAY_LEN * len) / 2);
+          m.quaternion.setFromUnitVectors(Z_AXIS, dir);
+          m.material.opacity = 0.92 * clamp01(fade);
+        }
+
+        // Éclaboussure
+        for (const d of splash) {
+          const lt = t - d.t0;
+          const on = lt >= 0 && lt < 1.5;
+          d.mesh.visible = on;
+          if (!on) continue;
+          d.mesh.position.set(
+            d.p0.x + d.v.x * lt,
+            d.p0.y + d.v.y * lt - 4.5 * lt * lt,
+            d.p0.z + d.v.z * lt,
+          );
+          const s = d.r * easeOutBack(seg(lt, 0, 0.2)) * (1 - seg(lt, 1.2, 1.5));
+          d.mesh.scale.setScalar(Math.max(0.001, s));
+        }
+
+        // Perles sur le tube
+        for (const b of beads) {
+          const on = t >= b.delay && t < PACK;
+          b.mesh.visible = on;
+          if (!on) continue;
+          const s = b.r * easeOutBack(seg(t, b.delay, b.delay + 0.3)) * (1 - seg(t, PACK - 0.25, PACK));
+          b.mesh.scale.set(Math.max(0.001, s), Math.max(0.001, s), Math.max(0.001, s * 0.55));
+        }
+
+        // Paillettes
+        for (let i = 0; i < SP; i++) {
+          const b = sparkBase[i];
+          sparkPos[i * 3] = b[0] + Math.sin(t * 0.5 + b[3]) * 0.2;
+          sparkPos[i * 3 + 1] = ((((b[1] + t * 0.35 + 7) % 14) + 14) % 14) - 7;
+          sparkPos[i * 3 + 2] = b[2];
+        }
+        sparkGeo.attributes.position.needsUpdate = true;
+
+        renderer.render(scene, camera);
+      }
+
+      window.addEventListener("hf-seek", (e) => renderAt(e.detail.time));
+      renderAt(window.__hfThreeTime || 0);
+      window.__soleaReady();
+    </script>
+  </body>
+</html>
