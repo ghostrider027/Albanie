@@ -238,6 +238,24 @@ function renderWinner(S){
   $("winLabel").textContent=win.length>1?"Égalité entre":win.length?"Victoire de":"Aucun point marqué";
   $("winName").textContent=win.map(p=>p.pseudo).join(" & ");
   $("winPts").textContent=win.length?plural(top,"point"):"";
+  renderPodium(list);
+}
+let podiumHtml=null;
+function renderPodium(list){
+  // trois premières places ; les ex aequo partagent la même marche
+  const groups=[];
+  for(const p of list){
+    if(p.score<=0)break;
+    const g=groups[groups.length-1];
+    if(g&&g.score===p.score)g.names.push(p.pseudo);
+    else if(groups.length<3)groups.push({score:p.score,names:[p.pseudo]});
+    else break;
+  }
+  const step=(g,k)=>g?'<div class="step p'+k+'"><span class="who">'+esc(g.names.join(" & "))+'</span><span class="sc">'+plural(g.score,"pt")+'</span><div class="blk">'+k+'</div></div>':'<div class="step"></div>';
+  const html=groups.length?step(groups[1],2)+step(groups[0],1)+step(groups[2],3):"";
+  // on ne réécrit le podium que s'il change, pour ne pas relancer l'animation à chaque mise à jour
+  if(html!==podiumHtml){podiumHtml=html;$("podium").innerHTML=html;}
+  $("podium").hidden=!groups.length;
 }
 function setTimer(wrap,bar,rem,total){
   $(wrap).hidden=rem==null;
