@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Blind Test des 29</title>
+<meta name="description" content="Blind test entre amis : l'organisateur lance Spotify, les joueurs répondent sur leur téléphone.">
+<meta name="theme-color" content="#12122e">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Figtree:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="style.css">
+<script src="vendor/peerjs.min.js" defer></script>
+<script src="vendor/qrcode.js" defer></script>
+<script src="config.js" defer></script>
+<script src="app.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1><a href="./">Blind Test<br>des <span>29</span></a></h1>
+    <div class="hstat">
+      <span class="chip" id="chip">Bienvenue</span>
+      <span class="round" id="round"></span>
+    </div>
+  </header>
+
+  <div class="cols">
+    <div class="col" id="colA">
+
+      <!-- Accueil -->
+      <section class="card stage" id="home" hidden>
+        <p class="big">On joue ?</p>
+        <p class="muted">L'organisateur lance la musique avec son compte Spotify, sur la télé ou une enceinte. Les joueurs répondent sur leur téléphone, sans compte ni appli.</p>
+        <div class="stack">
+          <button class="b-pink xl" id="goJoin">Je rejoins une partie</button>
+          <button class="b-gold xl" id="goHost">J'organise avec Spotify</button>
+        </div>
+      </section>
+
+      <!-- ===== Joueur ===== -->
+      <section class="card stage" id="pJoin" hidden>
+        <p class="big">Rejoindre une partie</p>
+        <form id="joinForm" class="stack" novalidate>
+          <div class="field"><label for="jCode">Code du salon</label><input id="jCode" class="code-in" maxlength="4" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ABCD"></div>
+          <div class="field"><label for="jName">Pseudo</label><input id="jName" maxlength="20" autocomplete="nickname" placeholder="Ex. Le Roi du Karaoké"></div>
+          <button class="b-pink" type="submit">Rejoindre</button>
+          <p class="feedback bad" id="jMsg"></p>
+        </form>
+      </section>
+
+      <section class="card stage" id="pConn" hidden>
+        <p class="big" id="pConnTitle">Connexion au salon…</p>
+        <p class="muted" id="pConnText"></p>
+        <button class="b-ghost" id="pLeave">Changer de salon ou de pseudo</button>
+      </section>
+
+      <section class="card stage" id="pWait" hidden>
+        <p class="big" id="pWaitTitle"></p>
+        <p class="muted" id="pWaitText"></p>
+        <div class="rules"><span><b>1 pt</b> l'artiste</span><span><b>1 pt</b> le titre</span><span><b>+1</b> au premier qui trouve les deux</span><span><b>3</b> essais par morceau</span></div>
+      </section>
+
+      <section class="card stage" id="pPlay" hidden>
+        <div class="timer" id="pTimer" hidden><span id="pTimerBar"></span></div>
+        <form id="gForm" class="stack" novalidate>
+          <div class="field"><label for="gArtist"><span>Artiste</span><span id="lA"></span></label><input id="gArtist" autocomplete="off" autocapitalize="words" enterkeyhint="next"></div>
+          <div class="field"><label for="gTitle"><span>Titre</span><span id="lT"></span></label><input id="gTitle" autocomplete="off" enterkeyhint="send"></div>
+          <button class="b-pink" id="gSend" type="submit">Envoyer</button>
+          <p class="feedback" id="gFb" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <!-- ===== Organisateur ===== -->
+      <section class="card regie" id="hSetup" hidden>
+        <h2>Brancher Spotify, une seule fois</h2>
+        <ol class="steps">
+          <li>Ouvre le <a href="https://developer.spotify.com/dashboard" target="_blank" rel="noopener">tableau de bord Spotify for Developers</a>, connecte-toi avec ton compte Spotify Premium et clique sur <b>Create app</b>.</li>
+          <li>Nom et description : ce que tu veux. Dans <b>Redirect URIs</b>, ajoute exactement cette adresse :
+            <span class="copy"><code id="redir"></code><button class="b-ghost sm" id="copyRedir" type="button">Copier</button></span></li>
+          <li>Coche <b>Web API</b> et <b>Web Playback SDK</b>, accepte les conditions et enregistre.</li>
+          <li>Dans <b>Settings</b>, copie le <b>Client ID</b> et colle-le ici.</li>
+        </ol>
+        <div class="field"><label for="cid">Client ID</label><input id="cid" autocomplete="off" spellcheck="false" placeholder="32 caractères"></div>
+        <button class="b-gold" id="saveCid">Enregistrer</button>
+        <p class="feedback bad" id="cidMsg"></p>
+        <p class="muted">Pas de Spotify sous la main ? <a href="?demo">Essaie le mode démo</a>, sans musique.</p>
+      </section>
+
+      <section class="card regie" id="hLogin" hidden>
+        <h2>Régie</h2>
+        <p class="big">Connecte ton Spotify</p>
+        <p class="muted">Seul l'organisateur se connecte. Il faut un compte Premium pour que le jeu lance les morceaux.</p>
+        <button class="b-gold" id="loginBtn">Se connecter à Spotify</button>
+        <p class="feedback bad" id="loginMsg"></p>
+        <button class="b-ghost sm" id="resetCid" type="button">Changer de Client ID</button>
+      </section>
+
+      <section class="card regie" id="hConfig" hidden>
+        <h2>Régie · réglages</h2>
+        <div class="spot"><span class="dot" id="acctDot"></span><span id="acctText">Spotify</span><button class="link" id="logout" type="button">Déconnecter</button></div>
+        <fieldset class="modes">
+          <legend>Musique</legend>
+          <label class="opt"><input type="radio" name="mode" value="playlist"><span><b>Le jeu lance une de mes playlists</b><small>Morceaux mélangés, extrait chronométré, réponse affichée à l'écran.</small></span></label>
+          <label class="opt"><input type="radio" name="mode" value="follow"><span><b>Je gère la musique dans Spotify</b><small>Le jeu suit ce qui joue : chaque nouveau morceau lance une manche. N'importe quelle playlist.</small></span></label>
+        </fieldset>
+        <div class="stack" id="cfgPlaylist">
+          <div class="field"><label for="plSel"><span>Playlist</span><button class="link" id="plRefresh" type="button">Actualiser</button></label><select id="plSel"></select></div>
+          <div class="field"><label for="plUrl">ou colle un lien de playlist</label><input id="plUrl" placeholder="https://open.spotify.com/playlist/…" autocomplete="off" spellcheck="false"></div>
+        </div>
+        <div class="field" id="cfgDevice"><label for="devSel"><span>Où jouer la musique</span><button class="link" id="devRefresh" type="button">Actualiser</button></label><select id="devSel"></select><small class="muted" id="devHelp"></small></div>
+        <div class="grid2">
+          <div class="field"><label for="roundsSel">Morceaux</label><select id="roundsSel"><option value="10">10</option><option value="15">15</option><option value="20">20</option><option value="30">30</option><option value="0">Sans limite</option></select></div>
+          <div class="field"><label for="durSel">Temps par morceau</label><select id="durSel"></select></div>
+        </div>
+        <label class="check" id="cfgRandom"><input type="checkbox" id="randChk"> Démarrer à un moment au hasard du morceau</label>
+        <label class="check" id="cfgAuto"><input type="checkbox" id="autoChk"> Enchaîner tout seul après chaque réponse</label>
+        <button class="b-pink xl" id="startBtn">Lancer la partie</button>
+        <p class="feedback" id="cfgMsg"></p>
+      </section>
+
+      <section class="card stage tv" id="hStage" hidden>
+        <div class="tvtop"><span class="tvround" id="tvRound"></span><span class="tvclock" id="tvClock"></span></div>
+        <div class="timer" id="tvTimer" hidden><span id="tvTimerBar"></span></div>
+        <p class="tvbig" id="tvTitle"></p>
+        <p class="muted" id="tvSub"></p>
+        <p class="demo" id="tvDemo" hidden></p>
+        <div class="row">
+          <button class="b-gold" id="revealBtn">Révéler</button>
+          <button class="b-pink" id="nextBtn">Morceau suivant</button>
+          <button class="b-ghost" id="endBtn">Terminer</button>
+        </div>
+        <div class="spot"><span class="dot" id="sDot"></span><span id="sText"></span></div>
+        <p class="feedback bad" id="tvMsg"></p>
+      </section>
+
+      <!-- ===== Commun ===== -->
+      <section class="card winner" id="ended" hidden>
+        <svg viewBox="0 0 72 48" aria-hidden="true"><path d="M4 44 L10 12 L24 26 L36 4 L48 26 L62 12 L68 44 Z" fill="var(--gold)"/><rect x="4" y="40" width="64" height="6" rx="2" fill="var(--pink)"/></svg>
+        <p class="muted" id="winLabel">Victoire de</p>
+        <p class="name" id="winName"></p>
+        <p class="muted" id="winPts"></p>
+        <div class="row" id="endCtrl" hidden>
+          <button class="b-pink" id="replayBtn">Rejouer avec les mêmes joueurs</button>
+        </div>
+      </section>
+      <section class="card reveal" id="reveal" hidden>
+        <div class="rv">
+          <img id="rvImg" alt="" hidden>
+          <div class="rvt">
+            <h2 id="rvLabel"></h2>
+            <p class="t" id="rvTitle"></p>
+            <p class="a" id="rvArtist"></p>
+          </div>
+        </div>
+        <p class="muted" id="rvFound"></p>
+        <p class="muted" id="rvNext"></p>
+      </section>
+
+    </div>
+
+    <div class="col" id="colB">
+      <section class="card invite" id="hInvite" hidden>
+        <h2>Pour rejoindre</h2>
+        <div class="inv">
+          <div class="qr" id="qr" aria-label="QR code du salon"></div>
+          <div class="invt">
+            <p class="muted">Code du salon</p>
+            <p class="code" id="roomCode"></p>
+            <p class="muted small" id="joinUrl"></p>
+            <button class="b-ghost sm" id="copyLink" type="button">Copier le lien</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="board" hidden>
+        <h2 id="boardTitle">Classement</h2>
+        <ol class="rank" id="rank"></ol>
+      </section>
+    </div>
+  </div>
+</div>
+</body>
+</html>
