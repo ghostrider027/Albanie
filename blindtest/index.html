@@ -6,6 +6,13 @@
 <title>Blind Test des 29</title>
 <meta name="description" content="Blind test entre amis : l'organisateur lance Spotify, les joueurs répondent sur leur téléphone.">
 <meta name="theme-color" content="#12122e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Blind Test">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Figtree:wght@400;600;800&display=swap">
@@ -36,6 +43,10 @@
           <button class="b-pink xl" id="goJoin">Je rejoins une partie</button>
           <button class="b-gold xl" id="goHost">J'organise avec Spotify</button>
         </div>
+        <div class="install" hidden>
+          <button class="b-ghost install-btn" type="button" hidden>Installer l'appli sur ce téléphone</button>
+          <p class="muted ios-tip" hidden>Pour l'avoir comme une appli : touche <b>Partager</b> <svg class="share" viewBox="0 0 20 24" aria-hidden="true"><path d="M10 2v13M5.5 6.5 10 2l4.5 4.5M4 10H2v12h16V10h-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> puis <b>Sur l'écran d'accueil</b>.</p>
+        </div>
       </section>
 
       <!-- ===== Joueur ===== -->
@@ -47,6 +58,10 @@
           <button class="b-pink" type="submit">Rejoindre</button>
           <p class="feedback bad" id="jMsg"></p>
         </form>
+        <div class="install" hidden>
+          <button class="b-ghost install-btn" type="button" hidden>Installer l'appli sur ce téléphone</button>
+          <p class="muted ios-tip" hidden>Pour l'avoir comme une appli : touche <b>Partager</b> <svg class="share" viewBox="0 0 20 24" aria-hidden="true"><path d="M10 2v13M5.5 6.5 10 2l4.5 4.5M4 10H2v12h16V10h-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> puis <b>Sur l'écran d'accueil</b>.</p>
+        </div>
       </section>
 
       <section class="card stage" id="pConn" hidden>

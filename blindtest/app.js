@@ -923,6 +923,24 @@ setInterval(()=>{
   }
 },250);
 
+/* ---------- installation sur l'écran d'accueil ---------- */
+let installEvt=null;
+const standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+function renderInstall(){
+  document.querySelectorAll(".install-btn").forEach(b=>b.hidden=!installEvt);
+  document.querySelectorAll(".ios-tip").forEach(p=>p.hidden=!(isIOS&&!standalone));
+  document.querySelectorAll(".install").forEach(d=>d.hidden=standalone||!(installEvt||isIOS));
+}
+addEventListener("beforeinstallprompt",e=>{e.preventDefault();installEvt=e;renderInstall();});
+addEventListener("appinstalled",()=>{installEvt=null;renderInstall();});
+document.addEventListener("click",async e=>{
+  if(!e.target.closest(".install-btn")||!installEvt)return;
+  const ev=installEvt;installEvt=null;
+  ev.prompt();await ev.userChoice.catch(()=>{});renderInstall();
+});
+renderInstall();
+
 /* ---------- démarrage ---------- */
 function boot(){
   bindHost();bindPlayer();

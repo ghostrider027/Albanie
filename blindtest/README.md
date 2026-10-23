@@ -37,6 +37,15 @@ Au bout d'une minute, le jeu est en ligne à l'adresse :
 
 Si un joueur recharge sa page ou perd le réseau, il revient automatiquement avec son score. Si l'organisateur recharge la sienne, la partie reprend là où elle en était.
 
+## L'installer comme une appli sur le téléphone
+
+Le jeu s'installe directement depuis le navigateur, sans passer par l'App Store ni le Play Store. Il a alors son icône sur l'écran d'accueil et s'ouvre en plein écran.
+
+- **iPhone (Safari)** : ouvre le jeu, touche **Partager** puis **Sur l'écran d'accueil**.
+- **Android (Chrome)** : touche le bouton **Installer l'appli sur ce téléphone** sur l'accueil du jeu, ou passe par le menu ⋮ puis **Installer l'application**.
+
+L'appli sert surtout à jouer. Pour organiser, mieux vaut utiliser le navigateur de l'ordinateur branché à la télé : sur iPhone, la connexion Spotify passe mal depuis une appli installée.
+
 ## Bon à savoir
 
 - **Spotify Premium est obligatoire** pour le compte qui crée l'appli Spotify et lance la musique. C'est une règle de Spotify pour les applis personnelles (mode « Development »).
@@ -56,4 +65,5 @@ Si un joueur recharge sa page ou perd le réseau, il revient automatiquement ave
 
 - `index.html`, `style.css`, `app.js` : le jeu
 - `config.js` : Client ID Spotify (facultatif)
+- `manifest.webmanifest`, `icons/` : installation comme appli sur le téléphone
 - `vendor/` : PeerJS 1.5.4 et qrcode-generator 1.4.4, sous licence MIT, inclus pour ne dépendre d'aucun CDN

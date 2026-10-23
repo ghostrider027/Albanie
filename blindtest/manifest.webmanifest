@@ -1,0 +1,17 @@
+{
+  "id": "./",
+  "name": "Blind Test des 29",
+  "short_name": "Blind Test",
+  "description": "Blind test entre amis : l'organisateur lance Spotify, les joueurs répondent sur leur téléphone.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#12122e",
+  "theme_color": "#12122e",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

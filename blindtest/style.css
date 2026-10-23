@@ -60,6 +60,8 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{ou
 select{font-size:16px;padding:11px 12px}
 .field input:disabled{border-color:var(--ok);color:var(--ok);opacity:1}
 .field input.out:disabled{border-color:var(--line);color:var(--muted)}
+.install{display:flex;flex-direction:column;gap:8px}
+.share{width:14px;height:17px;vertical-align:-2px;color:var(--gold)}
 .code-in{font-family:var(--display);letter-spacing:.3em;text-transform:uppercase}
 .ok{color:var(--ok)} .bad{color:var(--bad)}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
